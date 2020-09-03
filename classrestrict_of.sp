@@ -1,10 +1,15 @@
 #include <sourcemod>
 #include <openfortress>
 
+// Testing Stuff
+#include <sdktools>
+#include <dhooks>
+#include <sdkhooks>
+
 #pragma newdecls required
 #pragma semicolon 1
 
-#define PL_VERSION "0.1.0"
+#define PL_VERSION "1.0.1"
 
 #define TF_CLASS_DEMOMAN		4
 #define TF_CLASS_ENGINEER		9
@@ -23,6 +28,17 @@
 #define TF_TEAM_BLU					3
 #define TF_TEAM_RED					2
 
+#define CHECK(%1,%2) if (!(%1)) LogError("Could not load native for \"" ... %2 ... "\"")
+
+#define DECLARE_BS(%1)\
+if (!(0 < (%1) <= MaxClients))\
+	return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d) specified.", (%1));\
+if (!IsClientInGame((%1)))\
+	return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not in-game.", (%1))
+	
+Handle
+hRespawnPlayer
+;
 public Plugin myinfo =
 {
 	name        = "Open Fortress Class Restrictions",
@@ -36,10 +52,15 @@ int g_iClass[MAXPLAYERS + 1];
 ConVar g_hEnabled;
 ConVar g_hFlags;
 ConVar g_hImmunity;
-ConVar g_hLimits[4][12];
+ConVar g_hLimits[5][12];
 
 public void OnPluginStart()
 {
+	// Hmmm
+	GameData conf = LoadGameConfigFile("open-fortress");
+	if (!conf)	// Dies anyway but w/e
+		SetFailState("Gamedata \"open_fortress/addons/sourcemod/gamedata/open-fortress.txt\" does not exist.");
+		
 	CreateConVar("sm_classrestrict_version", PL_VERSION, "Restrict classes in TF2.", FCVAR_NOTIFY);
 	g_hEnabled                                = CreateConVar("sm_classrestrict_enabled",       "1",  "Enable/disable restricting classes.");
 	g_hFlags                                  = CreateConVar("sm_classrestrict_flags",         "",   "Admin flags for restricted classes.");
@@ -71,13 +92,32 @@ public void OnPluginStart()
 	HookEvent("player_spawn",       Event_PlayerSpawn);
 	HookEvent("player_team",        Event_PlayerTeam);
 	AutoExecConfig(true);
+
+	// Testing something
+	StartPrepSDKCall(SDKCall_Player);
+	PrepSDKCall_SetFromConf(conf, SDKConf_Virtual, "ForceRespawn");
+	hRespawnPlayer = EndPrepSDKCall();
+	CHECK(hRespawnPlayer, "TF2_RespawnPlayer");
 }
 
-public void OnMapStart()
+// New Testing Stuff
+public APLRes AskPluginLoad2(Handle self, bool late, char[] error, int max)
 {
-
+	CreateNative("TF2_RespawnPlayer", Native_TF2_RespawnPlayer);
+	RegPluginLibrary("openfortress");
+	return APLRes_Success;
 }
+// New Testing Stuff
+public any Native_TF2_RespawnPlayer(Handle plugin, int numParams)
+{
+	CHECK(hRespawnPlayer, "ForceRespawn");
+	int client = GetNativeCell(1);
+	DECLARE_BS(client);
 
+	SDKCall(hRespawnPlayer, client);
+	return 0;
+}
+//
 public void OnClientPutInServer(int client)
 {
 	g_iClass[client] = TF_CLASS_UNKNOWN;
@@ -93,7 +133,7 @@ public void Event_PlayerClass(Event event, const char[] name, bool dontBroadcast
 	{
 		ShowVGUIPanel(iClient, iTeam == TF_TEAM_BLU ? "class_blue" : "class_red");
 		PrintToChat(iClient, "Class is full/restricted! Please choose another class!");
-		TF2_SetPlayerClass(iClient, view_as<TFClassType>(g_iClass[iClient]));
+		PickClass(iClient); // TF2_SetPlayerClass(iClient, view_as<TFClassType>(g_iClass[iClient]), _, true);
 	}
 }
 
