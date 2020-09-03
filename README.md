@@ -2,8 +2,9 @@
 
 ### Install Instructions:
 - Get Sourcemod for Open Fortress by following the guide in the **\#server-hosting-troubleshooting** pins on the offical [Open Fortress Discord Server](https://discord.gg/Jk3NUb7)
-- **You will need Scag's Open Fortress Tools in order for it to compile and run! (That means linux only! Sorry Ruby...)**
-1. Place the `.smx` file in `open_fortress/addons/sourcemod/plugins` or compile the `.sp` yourself and put it in there (if you wanna make changes). 
+- **You will need ~~Scag's Open Fortress Tools~~ [Dhooks With Detours](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589) in order for it to compile and run! (~~That means linux only! Sorry Ruby...~~ It works on both Windows and Linux!)**
+1. Place the `.smx` file in `open_fortress/addons/sourcemod/plugins` or compile the `.sp` yourself and put it in there (if you wanna make changes).
+2. Place the `open-fortress.txt` inside `open_fortress/addons/sourcemod/gamedata` for offsets! (Thanks Scag!)
 2. Run server once to generate CFG.
 3. Edit commands in `plugin.classrestrict_of.cfg` to launch on server start or change them live with the commands below.
 
