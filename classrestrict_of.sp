@@ -70,6 +70,7 @@ public void OnPluginStart()
 	HookEvent("player_changeclass", Event_PlayerClass);
 	HookEvent("player_spawn",       Event_PlayerSpawn);
 	HookEvent("player_team",        Event_PlayerTeam);
+	AutoExecConfig(true);
 }
 
 public void OnMapStart()
