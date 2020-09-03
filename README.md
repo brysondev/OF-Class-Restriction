@@ -4,6 +4,7 @@
 - Get Sourcemod for Open Fortress by following the guide in the **\#server-hosting-troubleshooting** pins on the offical [Open Fortress Discord Server](https://discord.gg/Jk3NUb7)
 
 1. Place the `.smx` file in `open_fortress/addons/sourcemod/plugins` or compile the `.sp` yourself and put it in there (if you wanna make changes). You will need **Scag's Open Fortress Tools** in order for it to compile!
+2. Edit commands in `plugin.classrestrict_of.cfg` to launch on server start or change them live with the commands below.
 
 ### In-Game Stuff:
 - `sm_classrestrict_enabled` - Enable/disable restricting classes.
