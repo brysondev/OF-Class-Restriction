@@ -18,8 +18,8 @@
 - `sm_classrestrict_blu_snipers` - Limit for Blu snipers.
 - `sm_classrestrict_blu_soldiers` - Limit for Blu soldiers.
 - `sm_classrestrict_blu_spies` - Limit for Blu spies.
-- `sm_classrestrict_blu_civs` - Limit for Red civs.
-- `sm_classrestrict_blu_mercs` - Limit for Red mercs.
+- `sm_classrestrict_blu_civs` - Limit for Blu civs.
+- `sm_classrestrict_blu_mercs` - Limit for Blu mercs.
 
 *Reverse for the red team (sm_classrestrict_red...)*
 
